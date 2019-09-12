@@ -18,15 +18,17 @@ const employeeShema = mongoose.Schema({
   nextOfKin: { type: mixed, required: true }
 });
 
-const payroll = mongoose.Schema({
+const account = mongoose.Schema({
+  accountName: { type: String, required: true },
   accountNumber: { type: Number, required: true },
+  BankName: { type: String, required: true },
   salary: { type: Number, required: true },
   tax: { type: Number, required: true },
   commission: { type: Number, default: 0 },
   employee: { type: Schema.Types.ObjectId, ref: "Employee" }
 });
 
-const PayRoll = mongoose.model("PayRoll", payroll);
+const Account = mongoose.model("Account", account);
 const Employee = mongoose.model("Employee", employeeShema);
 
-module.exports = { Employee, PayRoll };
+module.exports = { Employee, Account };

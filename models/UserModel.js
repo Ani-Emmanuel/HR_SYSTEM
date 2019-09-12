@@ -13,25 +13,20 @@ const employeeShema = mongoose.Schema({
   state: { type: String, required: true },
   religion: { type: String, required: true },
   maritalStatus: { type: String, required: true },
-  salary: { type: Number, required: true },
   level: { type: Number, required: true },
   isAdmin: { type: Boolean, required: true },
   nextOfKin: { type: mixed, required: true }
 });
 
-// const nextOfKin = mongoose.Schema({
-//   firstname: String,
-//   middlename: String,
-//   Surname: String,String
-//   address: String,
-//   sex: String,
-//   phone: Number,
-//   state: String,
-//   religion: String,
-//   employee: { type: Schema.Types.ObjectId, ref: "Employee" }
-// });
+const payroll = mongoose.Schema({
+  accountNumber: { type: Number, required: true },
+  salary: { type: Number, required: true },
+  tax: { type: Number, required: true },
+  commission: { type: Number, default: 0 },
+  employee: { type: Schema.Types.ObjectId, ref: "Employee" }
+});
 
-// const nextOfKin = mongoose.model("nextOfKin", nextOfKin);
+const PayRoll = mongoose.model("PayRoll", payroll);
 const Employee = mongoose.model("Employee", employeeShema);
 
-module.exports = Employee;
+module.exports = { Employee, PayRoll };

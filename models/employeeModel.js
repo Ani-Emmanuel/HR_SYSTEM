@@ -3,20 +3,20 @@ const mongoose = require("mongoose");
 const employeeShema = mongoose.Schema({
   firstname: { type: String, required: true },
   middlename: { type: String, required: true },
-  Surname: { type: String, required: true },
+  surname: { type: String, required: true },
   dob: { type: Date, required: true },
   address: { type: String, required: true },
   sex: { type: String, required: true },
-  passport: { data: Buffer, contentType: String },
+  //passport: { data: Buffer, contentType: String },
   dateOfResume: { type: Date, required: true },
-  phone: { type: Number, min: 11, max: 14, required: true },
+  phone: { type: Number, required: true },
   state: { type: String, required: true },
   religion: { type: String, required: true },
   maritalStatus: { type: String, required: true },
   level: { type: Number, required: true },
   isAdmin: { type: Boolean, required: true },
-  nextOfKin: { type: mixed, required: true },
-  garrantors: { type: mixed, required: true }
+  nextOfKin: { type: mongoose.Schema.Types.Mixed , required: true },
+  garrantors: { type: mongoose.Schema.Types.Mixed , required: true }
 });
 
 const account = mongoose.Schema({
@@ -27,7 +27,7 @@ const account = mongoose.Schema({
   deductions: { type: Number, default: 0 },
   tax: { type: Number, required: true },
   commission: { type: Number, default: 0 },
-  employee: { type: Schema.Types.ObjectId, ref: "Employee" }
+  employee: { type: mongoose.Schema.Types.ObjectId, ref: "Employee" }
 });
 
 const Account = mongoose.model("Account", account);

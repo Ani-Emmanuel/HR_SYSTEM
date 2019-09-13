@@ -15,7 +15,8 @@ const employeeShema = mongoose.Schema({
   maritalStatus: { type: String, required: true },
   level: { type: Number, required: true },
   isAdmin: { type: Boolean, required: true },
-  nextOfKin: { type: mixed, required: true }
+  nextOfKin: { type: mixed, required: true },
+  garrantors: { type: mixed, required: true }
 });
 
 const account = mongoose.Schema({
@@ -23,6 +24,7 @@ const account = mongoose.Schema({
   accountNumber: { type: Number, required: true },
   BankName: { type: String, required: true },
   salary: { type: Number, required: true },
+  deductions: { type: Number, default: 0 },
   tax: { type: Number, required: true },
   commission: { type: Number, default: 0 },
   employee: { type: Schema.Types.ObjectId, ref: "Employee" }

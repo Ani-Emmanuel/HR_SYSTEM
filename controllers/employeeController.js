@@ -1,57 +1,64 @@
 const express = require("express");
 const user = require("../models/employeeModel");
 const employeeRouter = express.Router();
+var BaseRepo = require('../BaseReppository');
+var userRepo = new BaseRepo(user.Employee);
 
 employeeRouter
   .route("/")
   .get((req, res, next) => {
-    user.Employee.find({}).then(
-      employees => {
-        res.statusCode = 200;
+    userRepo.get({}).then(result => {
+      res.statusCode = 200;
         res.setHeader("Content-Type", "application/json");
-        res.json(employees);
-      },
-      err => next(err)
-    );
+        res.json(result);
+    }).catch(error => {
+      next(error)
+    })
   })
   .post((req, res, next) => {
-    user.Employee.create(req.body).then(
-      () => {
-        res.statusCode = 200;
+    userRepo.post(req.body).then((result)=>{
+      res.statusCode = 200;
         res.setHeader("Content-Type", "application/json");
-        res.json({ meesage: `employee record created successfully` });
-      },
-      err => next(err)
-    );
+        res.json(result);
+    }).catch(error => {
+      next(error)
+    })
   });
 
 employeeRouter
   .route("/:employeeId")
   .get((req, res, next) => {
-    user.Employee.findById(req.params.employeeId).then(
-      employee => {
-        res.employeesstatusCode = 200;
+    userRepo.get({_id:req.params.employeeId}).then(result => {
+      res.statusCode = 200;
         res.setHeader("Content-Type", "application/json");
-        res.json(employee);
-      },
-      err => next(err)
-    );
+        res.json(result);
+    }).catch(error => {
+      next(error)
+    })
   })
   .put((req, res, next) => {
-    user.Employee.findByIdAndUpdate(
-      req.params.employeeId,
-      {
-        $set: req.body
-      },
-      { new: true }
-    ).then(
-      employee => {
+    // user.Employee.findByIdAndUpdate(
+    //   req.params.employeeId,
+    //   {
+    //     $set: req.body
+    //   },
+    //   { new: true }
+    // ).then(
+    //   employee => {
+    //     res.statusCode = 200;
+    //     res.setHeader("Content-Type", "application/json");
+    //     res.json({ message: `${employee.firstname} Updated successfully` });
+    //   },
+    //   err => next(err)
+    // );
+
+    userRepo.put({_id:req.params.employeeId},req.body).then(result =>{
         res.statusCode = 200;
         res.setHeader("Content-Type", "application/json");
-        res.json({ message: `${employee.firstname} Updated successfully` });
-      },
-      err => next(err)
-    );
+        res.json(result);
+    }).catch(error => {
+      next(error)
+    })
   })
   .delete((req, res, next) => {
     user.Employee.findById(req.params.employeeId).then(employee => {

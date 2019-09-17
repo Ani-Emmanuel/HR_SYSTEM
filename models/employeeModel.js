@@ -31,7 +31,7 @@ const account = mongoose.Schema(
     deductions: { type: Number, default: 0 },
     tax: { type: Number, required: true },
     commission: { type: Number, default: 0 },
-    employee: { type: mongoose.Schema.Types.ObjectId, ref: "Employee" }
+    employee: { type: mongoose.Schema.Types.ObjectId, ref: "Employee", index : true }
   },
   { timestamps: true }
 );

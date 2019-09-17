@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyparser = require("body-parser");
-const controller = require("./controllers/employeeController");
+const employeeController = require("./controllers/employeeController");
+const accountController = require("./controllers/accountController")
 const mongoose = require("mongoose");
 
 mongoose.Promise = require("bluebird");
@@ -10,7 +11,8 @@ const app = express();
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: false }));
 
-app.use("/employee", controller);
+app.use("/employee", employeeController);
+app.use("/account", accountController);
 
 // const app = require("./app");
 const port = process.env.port || 3000;

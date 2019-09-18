@@ -27,7 +27,7 @@ const account = mongoose.Schema(
   {
     accountName: { type: String, required: true },
     accountNumber: { type: Number, required: true },
-    BankName: { type: String, required: true },
+    bankName: { type: String, required: true },
     bankCode: { type: String, required: true },
     employee: {
       type: mongoose.Schema.Types.ObjectId,

@@ -1,14 +1,14 @@
 const express = require("express");
-const { Account } = require("../models/employeeModel");
+const salaryStructureRouter = express.Router();
 const BaseRepo = require("../BaseReppository");
+const { SalaryStructure } = require("../models/employeeModel");
 
-const accoutRepo = new BaseRepo(Account);
+const salaryStructure = new BaseRepo(SalaryStructure);
 
-const accountRouter = express.Router();
-accountRouter
+salaryStructureRouter
   .route("/")
   .get((req, res, next) => {
-    accoutRepo
+    salaryStructure
       .get({})
       .then(result => {
         res.statusCode = 200;
@@ -18,29 +18,20 @@ accountRouter
       .catch(err => next(err));
   })
   .post((req, res, next) => {
-    data = {
-      accountName: req.body.accountName,
-      accountNumber: req.body.accountNumber,
-      bankName: req.body.bankName,
-      bankCode: req.body.bankCode,
-      employee: _id
-    };
-    accoutRepo
-      .post(data)
+    salaryStructure
+      .post(req.body)
       .then(() => {
         res.statusCode = 200;
         res.setHeader("Content-Type", "application/json");
-        res.json({
-          message: `Account created successfully`
-        });
+        res.json({ message: "Record Created successfully" });
       })
-      .catch(err => next(err));
+      .catch(err => nexxt(err));
   });
 
-accountRouter
+salaryStructureRouter
   .route("/:id")
   .get((req, res, next) => {
-    accoutRepo
+    salaryStructure
       .get({ _id: req.params.id })
       .then(result => {
         res.statusCode = 200;
@@ -50,16 +41,14 @@ accountRouter
       .catch(err => next(err));
   })
   .put((req, res, next) => {
-    accoutRepo
+    salaryStructure
       .put({ _id: req.params.id }, { $set: req.body })
       .then(() => {
         res.statusCode = 200;
         res.setHeader("Content-Type", "application/json");
-        res.json({
-          message: `Account details updated successfully`
-        });
+        res.json({ message: "Record updated successfully" });
       })
       .catch(err => next(err));
   });
 
-module.exports = accountRouter;
+module.exports = salaryStructureRouter;

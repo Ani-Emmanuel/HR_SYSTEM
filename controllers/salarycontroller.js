@@ -1,14 +1,14 @@
 const express = require("express");
-const { Account } = require("../models/employeeModel");
+const salaryRouter = express.Router();
+const { Salary } = require("../models/employeeModel");
 const BaseRepo = require("../BaseReppository");
 
-const accoutRepo = new BaseRepo(Account);
+const salaryRepo = new BaseRepo(Salary);
 
-const accountRouter = express.Router();
-accountRouter
+salaryRouter
   .route("/")
   .get((req, res, next) => {
-    accoutRepo
+    salaryRepo
       .get({})
       .then(result => {
         res.statusCode = 200;
@@ -19,47 +19,43 @@ accountRouter
   })
   .post((req, res, next) => {
     data = {
-      accountName: req.body.accountName,
-      accountNumber: req.body.accountNumber,
-      bankName: req.body.bankName,
-      bankCode: req.body.bankCode,
+      deductions: req.body.deductions || 0,
+      month: req.body.month,
+      tax: req.body.tax,
+      commission: req.body.commission || 0,
       employee: _id
     };
-    accoutRepo
+    salaryRepo
       .post(data)
       .then(() => {
         res.statusCode = 200;
         res.setHeader("Content-Type", "application/json");
-        res.json({
-          message: `Account created successfully`
-        });
+        res.json({ message: "Record created successfully" });
       })
       .catch(err => next(err));
   });
 
-accountRouter
+salaryRouter
   .route("/:id")
   .get((req, res, next) => {
-    accoutRepo
+    salaryRepo
       .get({ _id: req.params.id })
       .then(result => {
-        res.statusCode = 200;
+        res.statusCRouterode = 200;
         res.setHeader("Content-Type", "application/json");
         res.json(result);
       })
       .catch(err => next(err));
   })
   .put((req, res, next) => {
-    accoutRepo
-      .put({ _id: req.params.id }, { $set: req.body })
+    salaryRepo
+      .put({ _id: req.body.id }, { $set: req.body })
       .then(() => {
         res.statusCode = 200;
         res.setHeader("Content-Type", "application/json");
-        res.json({
-          message: `Account details updated successfully`
-        });
+        res.json({ message: "Record Updated successfully" });
       })
       .catch(err => next(err));
   });
 
-module.exports = accountRouter;
+module.exports = salaryRouter;

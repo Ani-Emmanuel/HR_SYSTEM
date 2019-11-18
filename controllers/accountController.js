@@ -23,7 +23,7 @@ accountRouter
       accountNumber: req.body.accountNumber,
       bankName: req.body.bankName,
       bankCode: req.body.bankCode,
-      employee: _id
+      employee: req.body.employee
     };
     accoutRepo
       .post(data)

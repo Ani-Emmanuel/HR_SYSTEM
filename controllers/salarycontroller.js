@@ -23,7 +23,7 @@ salaryRouter
       month: req.body.month,
       tax: req.body.tax,
       commission: req.body.commission || 0,
-      employee: _id
+      employee: req.body.employee
     };
     salaryRepo
       .post(data)

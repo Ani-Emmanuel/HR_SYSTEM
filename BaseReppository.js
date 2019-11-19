@@ -2,7 +2,13 @@ var mongoose = require("mongoose");
 var { Employee } = require("./models/employeeModel");
 var { promisify } = require("util");
 
-var BaseRepository = function(schema) {
+var BaseRepository = function(
+  schema,
+  collectionName,
+  localfield,
+  foreignfield,
+  output
+) {
   this.schema = schema;
 
   this.get = function(query = {}, pagesize = 20, pagenumber = 1) {
@@ -22,6 +28,22 @@ var BaseRepository = function(schema) {
 
   this.delete = function(id = {}) {
     return this.schema.findByIdAndRemove(id);
+  };
+
+  this.aggregation = function(collectionName, local, foreign, output) {
+    return this.schema.aggregate([
+      {
+        $lookup: {
+          from: `${collectionName}`,
+          localField: `${local}`,
+          foreignField: `${foreign}`,
+          as: `${output}`
+        }
+      },
+      {
+        $unwind: `$${output}`
+      }
+    ]);
   };
 };
 

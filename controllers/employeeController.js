@@ -60,31 +60,13 @@ employeeRouter
   });
 
 employeeRouter.route("/:employeeId/leave").get((req, res, next) => {
+
   userRepo
-    .get({ _id: req.params.employeeId })
-    .then(user => {
-      user
-        .aggregate([
-          {
-            $lookup: {
-              from: "Leave",
-              localField: "_id",
-              foreignField: "employee",
-              as: "_leave"
-            }
-          },
-          {
-            $unwind: "$_leave"
-          }
-        ])
-        .then(leave => {
-          res.statusCode(200);
-          res.setHeader("Content-Type", "application/json");
-          res.json(leave);
-        })
-        .catch(e => {
-          next(e);
-        });
+    .aggregation("leaves", "_id", "employee", "employee_leave")
+    .then(leave => {
+      res.statusCode = 200;
+      res.setHeader("Content-Type", "application/json");
+      res.json(leave);
     })
     .catch(e => {
       next(e);
@@ -93,29 +75,11 @@ employeeRouter.route("/:employeeId/leave").get((req, res, next) => {
 
 employeeRouter.route("/:employeeId/account").get((req, res, next) => {
   userRepo
-    .get({ _id: req.params.employeeId })
-    .then(() => {
-      User.Employee.aggregate([
-        {
-          $lookup: {
-            from: "salaries",
-            localField: "_id",
-            foreignField: "employee",
-            as: "salary"
-          }
-        },
-        {
-          $unwind: { path: "$_salary", preserveNullAndEmptyArrays: true }
-        }
-      ])
-        .then(_salary => {
-          res.statusCode = 200;
-          res.setHeader("Content-Type", "application/json");
-          res.json(_salary);
-        })
-        .catch(e => {
-          next(e);
-        });
+    .aggregation("salaries", "_id", "employee", "employee_salary")
+    .then(leave => {
+      res.statusCode = 200;
+      res.setHeader("Content-Type", "application/json");
+      res.json(leave);
     })
     .catch(e => {
       next(e);

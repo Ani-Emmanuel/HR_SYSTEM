@@ -10,6 +10,7 @@ salaryRouter
   .get((req, res, next) => {
     salaryRepo
       .get({})
+      .populate("salary")
       .then(result => {
         res.statusCode = 200;
         res.setHeader("Content-Type", "application/json");
@@ -49,7 +50,7 @@ salaryRouter
   })
   .put((req, res, next) => {
     salaryRepo
-      .put({ _id: req.body.id }, { $set: req.body })
+      .put({ _id: req.params.id }, req.body)
       .then(() => {
         res.statusCode = 200;
         res.setHeader("Content-Type", "application/json");

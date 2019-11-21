@@ -3,6 +3,7 @@ const User = require("../models/employeeModel");
 const employeeRouter = express.Router();
 var BaseRepo = require("../BaseReppository");
 var userRepo = new BaseRepo(User.Employee);
+var salaryRepo = new BaseRepo(User.SalaryStructure);
 var db = require("../db");
 
 employeeRouter
@@ -60,7 +61,6 @@ employeeRouter
   });
 
 employeeRouter.route("/:employeeId/leave").get((req, res, next) => {
-
   userRepo
     .aggregation("leaves", "_id", "employee", "employee_leave")
     .then(leave => {
@@ -73,56 +73,58 @@ employeeRouter.route("/:employeeId/leave").get((req, res, next) => {
     });
 });
 
-employeeRouter.route("/:employeeId/account").get((req, res, next) => {
-  userRepo
-    .aggregation("salaries", "_id", "employee", "employee_salary")
-    .then(leave => {
-      res.statusCode = 200;
-      res.setHeader("Content-Type", "application/json");
-      res.json(leave);
-    })
-    .catch(e => {
-      next(e);
+employeeRouter.route("/:employeeId/account").get(async (req, res, next) => {
+  // userRepo
+  //   .aggregation("salaries", "_id", "employee", "employee_salary")
+  //   .then(leave => {
+  //     let salaries = salaryRepo.get({ _id: leave.employee_salary.salary});
+  //     delete leave.employee_salary.salary;
+  //     leave.employee_salary.salary = salaries
+  //     res.statusCode = 200;
+  //     res.setHeader("Content-Type", "application/json");
+  //     res.json(leave);
+  //   })
+  //   .catch(e => {
+  //     next(e);
+  //   });.aggregation
+  try {
+    let aggregated = await userRepo.aggregation(
+      "salaries",
+      "_id",
+      "employee",
+      "employee_salary"
+    );
+    let converted = Array.from(aggregated);
+    let salary = await salaryRepo.get({
+      _id: converted[0]["employee_salary"].salary
     });
+    // console.log(salary[0]._id)
+    delete converted[0]["employee_salary"].salary;
+    delete salary[0]._id;
+    converted[0]["employee_salary"].salary = salary;
+    res.status(200).json(converted);
+  } catch (error) {
+    next(error);
+  }
 });
 
 employeeRouter.route("/:employeeId/fulldetails").get((req, res, next) => {
+  userRepo.get({ _id: req.params.employeeId });
   userRepo
-    .get({ _id: req.params.employeeId })
-    .then(user => {
-      user
-        .aggregate([
-          {
-            $lookup: {
-              from: "salaries",
-              localField: "_id",
-              foreignField: "employee",
-              as: "salary"
-            }
-          },
-          {
-            $unwind: "$_salary"
-          },
-          {
-            $lookup: {
-              from: "Leave",
-              localField: "_id",
-              foreignField: "employee",
-              as: "_leave"
-            }
-          },
-          {
-            $unwind: "$_leave"
-          }
-        ])
-        .then(employee => {
-          res.statusCode(200);
-          res.setHeader("Content-Type", "application/json");
-          res.json(employee);
-        })
-        .catch(e => {
-          next(e);
-        });
+    .aggregation(
+      "salaries",
+      "_id",
+      "employee",
+      "employee_salary",
+      "leaves",
+      "_id",
+      "employee",
+      "employee_leave"
+    )
+    .then(employee => {
+      res.statusCode = 200;
+      res.setHeader("Content-Type", "application/json");
+      res.json(employee);
     })
     .catch(e => {
       next(e);

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+//Employee Schema Model
 const employeeShema = mongoose.Schema(
   {
     firstname: { type: String, required: true },
@@ -24,6 +25,7 @@ const employeeShema = mongoose.Schema(
   { timestamps: true }
 );
 
+//Account Schema Model
 const account = mongoose.Schema(
   {
     accountName: { type: String, required: true },
@@ -38,6 +40,7 @@ const account = mongoose.Schema(
   { timestamps: true }
 );
 
+//Salary Schema Model
 const salary = mongoose.Schema({
   deductions: { type: Number, default: 0 },
   month: { type: String, required: true },
@@ -53,11 +56,13 @@ const salary = mongoose.Schema({
   }
 });
 
+//Salary Structure Schema Model
 const salaryStructure = mongoose.Schema({
   level: { type: Number, required: true },
   baseSalary: { type: Number, required: true }
 });
 
+//Leave Schema Model
 const leave = mongoose.Schema({
   purpose: { type: String, required: true },
   employee: { type: mongoose.Schema.Types.ObjectId, ref: "Employee" },
